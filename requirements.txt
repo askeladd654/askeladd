@@ -24,10 +24,10 @@ pillow
 psutil
 psycopg2-binary
 pybase64
-pyrogram
+pyrogram==2.0.44
 python-dotenv
 python-magic
-python-telegram-bot
+python-telegram-bot==13.7
 qbittorrent-api
 requests
 speedtest-cli
