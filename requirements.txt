@@ -24,7 +24,7 @@ pillow
 psutil
 psycopg2-binary
 pybase64
-pyrogram==2.0.44
+pyrogram==2.0.29
 python-dotenv
 python-magic
 python-telegram-bot==13.7
