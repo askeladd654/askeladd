@@ -16,7 +16,7 @@ google-auth-httplib2
 google-auth-oauthlib
 gunicorn
 heroku3
-lk21
+git+https://github.com/zevtyardt/lk21.git
 lxml
 megasdkrestclient
 mediainfo
