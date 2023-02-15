@@ -21,9 +21,6 @@ class _BotCommands:
         self.SearchCommand = getCommand('SEARCH_COMMAND', f'search{CMD_INDEX}')
         self.StatusCommand = getCommand('STATUS_COMMAND', f'status{CMD_INDEX}')
         self.AuthorizedUsersCommand = getCommand('USERS_COMMAND', f'users{CMD_INDEX}')
-        self.PaidUsersCommand = getCommand('PAID_COMMAND', f'paid{CMD_INDEX}')
-        self.AddPaidCommand = getCommand('ADDPAID_COMMAND', f'addpaid{CMD_INDEX}')
-        self.RmPaidCommand = getCommand('RMPAID_COMMAND', f'rmpaid{CMD_INDEX}')
         self.PreNameCommand = getCommand('PRENAME_COMMAND', f'prefix{CMD_INDEX}')
         self.SufNameCommand = getCommand('SUFFIX_COMMAND', f'suffix{CMD_INDEX}')
         self.CaptionCommand = getCommand('CAPTION_COMMAND', f'caption{CMD_INDEX}')
@@ -44,7 +41,6 @@ class _BotCommands:
         self.CountCommand = getCommand('COUNT_COMMAND', f'count{CMD_INDEX}')
         self.WatchCommand =  getCommand('WATCH_COMMAND', f'watch{CMD_INDEX}')
         self.ZipWatchCommand = getCommand('ZIPWATCH_COMMAND', f'zipwatch{CMD_INDEX}')
-        self.ScrapeCommand = getCommand('SCRAPE_COMMAND', f'scrape{CMD_INDEX}')
         self.QbMirrorCommand = getCommand('QBMIRROR_COMMAND', f'qbmirror{CMD_INDEX}')
         self.QbUnzipMirrorCommand = getCommand('QBUNZIP_COMMAND', f'qbunzipmirror{CMD_INDEX}')
         self.QbZipMirrorCommand = getCommand('QBZIP_COMMAND', f'qbzipmirror{CMD_INDEX}')
@@ -68,11 +64,8 @@ class _BotCommands:
         self.RssSubCommand = getCommand('RSSSUB_COMMAND', f'rsssub{CMD_INDEX}')
         self.RssUnSubCommand = getCommand('RSSUNSUB_COMMAND', f'rssunsub{CMD_INDEX}')
         self.RssSettingsCommand = getCommand('RSSSET_COMMAND', f'rssset{CMD_INDEX}')
-        self.WayBackCommand = getCommand('WAYBACK_COMMAND', f'wayback{CMD_INDEX}')
         self.AddleechlogCommand = getCommand('ADDLEECHLOG_CMD', f'addleechlog{CMD_INDEX}')
         self.RmleechlogCommand = getCommand('RMLEECHLOG_CMD', f'rmleechlog{CMD_INDEX}')
-        self.UsageCommand = getCommand('USAGE_COMMAND', f'usage{CMD_INDEX}')
-        self.SleepCommand = getCommand('SLEEP_COMMAND', f'sleep{CMD_INDEX}')
         self.EvalCommand = f'eval{CMD_INDEX}'
         self.ExecCommand = f'exec{CMD_INDEX}'
         self.ClearLocalsCommand = f'clearlocals{CMD_INDEX}'
