@@ -27,9 +27,91 @@ from .helper.telegram_helper.bot_commands import BotCommands
 from .helper.telegram_helper.message_utils import sendMessage, sendMarkup, editMessage, sendLogFile, sendPhoto
 from .helper.telegram_helper.filters import CustomFilters
 from .helper.telegram_helper.button_build import ButtonMaker
+from bot.modules.wayback import getRandomUserAgent
 from .modules import authorize, list, cancel_mirror, mirror_status, mirror_leech, clone, ytdlp, shell, eval, \
                     delete, count, leech_settings, search, rss, wayback, speedtest, usage, anilist, bt_select, mediainfo, hash, sleep, addons, scraper
 from datetime import datetime
+
+try: import heroku3
+except ModuleNotFoundError: srun("pip install heroku3", capture_output=False, shell=True)
+try: import heroku3
+except Exception as f:
+    LOGGER.warning("heroku3 cannot imported. add to your deployer requirements.txt file.")
+    LOGGER.warning(f)
+    HEROKU_APP_NAME = None
+    HEROKU_API_KEY = None
+    
+def getHerokuDetails(h_api_key, h_app_name):
+    try: import heroku3
+    except ModuleNotFoundError: run("pip install heroku3", capture_output=False, shell=True)
+    try: import heroku3
+    except Exception as f:
+        LOGGER.warning("heroku3 cannot imported. add to your deployer requirements.txt file.")
+        LOGGER.warning(f)
+        return None
+    if (not h_api_key) or (not h_app_name): return None
+    try:
+        heroku_api = "https://api.heroku.com"
+        Heroku = heroku3.from_key(h_api_key)
+        app = Heroku.app(h_app_name)
+        useragent = getRandomUserAgent()
+        user_id = Heroku.account().id
+        headers = {
+            "User-Agent": useragent,
+            "Authorization": f"Bearer {h_api_key}",
+            "Accept": "application/vnd.heroku+json; version=3.account-quotas",
+        }
+        path = "/accounts/" + user_id + "/actions/get-quota"
+        session = requests.Session()
+        result = (session.get(heroku_api + path, headers=headers)).json()
+        abc = ""
+        account_quota = result["account_quota"]
+        quota_used = result["quota_used"]
+        quota_remain = account_quota - quota_used
+        if EMOJI_THEME is True:
+            abc += f'<b></b>\n'
+            abc += f'<b>╭─《🌐 HEROKU STATS 🌐》</b>\n'
+            abc += f"<b>├ 💪🏻 FULL</b>: {get_readable_time(account_quota)}\n"
+            abc += f"<b>├ 👎🏻 USED</b>: {get_readable_time(quota_used)}\n"
+            abc += f"<b>├ 👍🏻 FREE</b>: {get_readable_time(quota_remain)}\n"
+        else:
+            abc += f'<b></b>\n'
+            abc += f'<b>╭─《 HEROKU STATS 》</b>\n'
+            abc += f"<b>├ FULL</b>: {get_readable_time(account_quota)}\n"
+            abc += f"<b>├ USED</b>: {get_readable_time(quota_used)}\n"
+            abc += f"<b>├ FREE</b>: {get_readable_time(quota_remain)}\n"
+        # App Quota
+        AppQuotaUsed = 0
+        OtherAppsUsage = 0
+        for apps in result["apps"]:
+            if str(apps.get("app_uuid")) == str(app.id):
+                try:
+                    AppQuotaUsed = apps.get("quota_used")
+                except Exception as t:
+                    LOGGER.error("error when adding main dyno")
+                    LOGGER.error(t)
+                    pass
+            else:
+                try:
+                    OtherAppsUsage += int(apps.get("quota_used"))
+                except Exception as t:
+                    LOGGER.error("error when adding other dyno")
+                    LOGGER.error(t)
+                    pass
+        LOGGER.info(f"This App: {str(app.name)}")
+        if EMOJI_THEME is True:
+            abc += f"<b>├ 🎃 APP USAGE:</b> {get_readable_time(AppQuotaUsed)}\n"
+            abc += f"<b>├ 🗑️ OTHER APP:</b> {get_readable_time(OtherAppsUsage)}\n"
+            abc += f'<b>╰─《 ☣️ {CREDIT_NAME} ☣️ 》</b>'
+        else:
+            abc += f"<b>├ APP USAGE:</b> {get_readable_time(AppQuotaUsed)}\n"
+            abc += f"<b>├ OTHER APP:</b> {get_readable_time(OtherAppsUsage)}\n"
+            abc += f'<b>╰─《 {CREDIT_NAME} 》</b>'
+        return abc
+    except Exception as g:
+        LOGGER.error(g)
+        return None
+
 
 def progress_bar(percentage):
     p_used = FINISHED_PROGRESS_STR
@@ -131,6 +213,15 @@ def stats(update, context):
                      f'<b>├  Mega: </b>{mega_limit}\n'\
                      f'<b>├  Total Tasks: </b>{total_task}\n'\
                      f'<b>╰  User Tasks: </b>{user_task}\n\n'
+
+                
+
+    heroku = getHerokuDetails(HEROKU_API_KEY, HEROKU_APP_NAME)
+    if heroku: stats += heroku 
+    if PICS:
+        sendPhoto(stats, context.bot, update.message, random.choice(PICS))
+    else:
+        sendMessage(stats, context.bot, update.message)
 
 def start(update, context):
     buttons = ButtonMaker()
@@ -377,6 +468,7 @@ if SET_BOT_COMMANDS:
         (f'{BotCommands.CaptionCommand}','Set Caption for Leech Files'),
         (f'{BotCommands.RemnameCommand}','Remove Specific words from filename'),
         (f'{BotCommands.UserLogCommand}','Set Dump Channel for Leech Files'),
+        (f'{BotCommands.ScrapeCommand}','Scrape Links from Website'),
         (f'{BotCommands.CountCommand}','Count file/folder of Drive'),
         (f'{BotCommands.DeleteCommand}','Delete file/folder from Drive'),
         (f'{BotCommands.CancelMirror}','Cancel a task'),
@@ -387,11 +479,14 @@ if SET_BOT_COMMANDS:
         (f'{BotCommands.SetThumbCommand}','Set thumbnail'),
         (f'{BotCommands.StatusCommand}','Get mirror status message'),
         (f'{BotCommands.SpeedCommand}','Speedtest'),
+        (f'{BotCommands.WayBackCommand}','Internet Archive'),
         (f'{BotCommands.MediaInfoCommand}','Get Information of telegram Files'),
         (f'{BotCommands.HashCommand}','Get Hash of telegram Files'),
         (f'{BotCommands.PingCommand}','Ping the bot'),
         (f'{BotCommands.RestartCommand}','Restart the bot'),
         (f'{BotCommands.LogCommand}','Get the bot Log'),
+        (f'{BotCommands.UsageCommand}','Heroku Dyno usage'),
+        (f'{BotCommands.SleepCommand}','Sleep Bot'),
         (f'{BotCommands.HelpCommand}','Get detailed help')
     ]
 
