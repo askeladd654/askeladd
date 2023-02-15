@@ -37,3 +37,5 @@ tgCrypto==1.2.5
 urllib3==1.26.14
 xattr==0.10.1
 yt-dlp==2023.1.6
+heroku3==5.2.0
+waybackpy==3.0.6
