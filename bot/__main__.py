@@ -132,15 +132,6 @@ def stats(update, context):
                      f'<b>├  Total Tasks: </b>{total_task}\n'\
                      f'<b>╰  User Tasks: </b>{user_task}\n\n'
 
-                
-
-    heroku = getHerokuDetails(HEROKU_API_KEY, HEROKU_APP_NAME)
-    if heroku: stats += heroku 
-    if PICS:
-        sendPhoto(stats, context.bot, update.message, random.choice(PICS))
-    else:
-        sendMessage(stats, context.bot, update.message)
-
 def start(update, context):
     buttons = ButtonMaker()
     if EMOJI_THEME is True:
@@ -386,7 +377,6 @@ if SET_BOT_COMMANDS:
         (f'{BotCommands.CaptionCommand}','Set Caption for Leech Files'),
         (f'{BotCommands.RemnameCommand}','Remove Specific words from filename'),
         (f'{BotCommands.UserLogCommand}','Set Dump Channel for Leech Files'),
-        (f'{BotCommands.ScrapeCommand}','Scrape Links from Website'),
         (f'{BotCommands.CountCommand}','Count file/folder of Drive'),
         (f'{BotCommands.DeleteCommand}','Delete file/folder from Drive'),
         (f'{BotCommands.CancelMirror}','Cancel a task'),
@@ -397,14 +387,11 @@ if SET_BOT_COMMANDS:
         (f'{BotCommands.SetThumbCommand}','Set thumbnail'),
         (f'{BotCommands.StatusCommand}','Get mirror status message'),
         (f'{BotCommands.SpeedCommand}','Speedtest'),
-        (f'{BotCommands.WayBackCommand}','Internet Archive'),
         (f'{BotCommands.MediaInfoCommand}','Get Information of telegram Files'),
         (f'{BotCommands.HashCommand}','Get Hash of telegram Files'),
         (f'{BotCommands.PingCommand}','Ping the bot'),
         (f'{BotCommands.RestartCommand}','Restart the bot'),
         (f'{BotCommands.LogCommand}','Get the bot Log'),
-        (f'{BotCommands.UsageCommand}','Heroku Dyno usage'),
-        (f'{BotCommands.SleepCommand}','Sleep Bot'),
         (f'{BotCommands.HelpCommand}','Get detailed help')
     ]
 
